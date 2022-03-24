@@ -1,6 +1,8 @@
-from numpy import row_stack
+import matplotlib.pyplot as plt
+import numpy as np
 import openpyxl
 import math
+import shutil
 
 usersDB = [
   {
@@ -50,9 +52,11 @@ while (True):
         if (metodoInput != 'Compuesta' and metodoInput != '4'):
           norteInput = int(input('Ingrese Norte: '))
           esteInput = int(input('Ingrese Este: '))
-          wb = openpyxl.load_workbook('./Excel.xlsx')
+          shutil.copy('./Excel.xlsx', './ExcelGenerado.xlsx')
+          wb = openpyxl.load_workbook('./ExcelGenerado.xlsx')
         else :
-          wb = openpyxl.load_workbook('./NC.xlsx')
+          shutil.copy('./NC.xlsx', './NCGenerado.xlsx')
+          wb = openpyxl.load_workbook('./NCGenerado.xlsx')
 
         if (metodoInput == 'Brujula' or metodoInput == '1'):
           print('Brujula')
@@ -134,6 +138,22 @@ while (True):
           
           sheet['N3'] = norteInput
           sheet['O3'] = esteInput
+
+          wb.save('ExcelGenerado.xlsx')
+          print('Datos generados en ExcelGenerado.xlsx')
+
+          xxx = [norteInput]
+          yyy = [esteInput]
+          for rowG in rowsExcel:
+            if (rowG[13] != None):
+              xxx.append(rowG[13])
+              yyy.append(rowG[14])
+
+          # * Grafica
+          fig, ax = plt.subplots()
+          ax.set_title(f'Grafica Correccion de Poligonal')
+          ax.plot(xxx, yyy)
+          plt.show()
 
         if (metodoInput == 'Transito' or metodoInput == '2'):
           print('Transito')
@@ -236,6 +256,22 @@ while (True):
 
           sheet['P3'] = norteInput
           sheet['Q3'] = norteInput
+
+          wb.save('ExcelGenerado.xlsx')
+          print('Datos generados en ExcelGenerado.xlsx')
+
+          xxx = [norteInput]
+          yyy = [esteInput]
+          for rowG in rowsExcel:
+            if (rowG[13] != None):
+              xxx.append(rowG[15])
+              yyy.append(rowG[16])
+
+          # * Grafica
+          fig, ax = plt.subplots()
+          ax.set_title(f'Grafica Correccion de Poligonal')
+          ax.plot(xxx, yyy)
+          plt.show()
 
         if (metodoInput == 'Crandall' or metodoInput == '3'):
           print('Crandall')
@@ -343,6 +379,22 @@ while (True):
           
           sheet['R3'] = norteInput
           sheet['S3'] = norteInput
+
+          wb.save('ExcelGenerado.xlsx')
+          print('Datos generados en ExcelGenerado.xlsx')
+
+          xxx = [norteInput]
+          yyy = [esteInput]
+          for rowG in rowsExcel:
+            if (rowG[13] != None):
+              xxx.append(rowG[17])
+              yyy.append(rowG[18])
+
+          # * Grafica
+          fig, ax = plt.subplots()
+          ax.set_title(f'Grafica Correccion de Poligonal')
+          ax.plot(xxx, yyy)
+          plt.show()
 
         if (metodoInput == 'Compuesta' or metodoInput == '4'):
           print('Compuesta')
@@ -516,21 +568,12 @@ while (True):
           sheet[f'AC13'] = sumDist
           sheet[f'AC15'] = sumDist2
           sheet[f'AC17'] = sumDist + sumDist2
-          
-          # for row in rowsExcel:
-          #   print('----', row[0:8])
 
+          wb.save('NCGenerado.xlsx')
+          print('Datos generados en NCGenerado.xlsx')
 
-        if (metodoInput != 'Compuesta' and metodoInput != '4'):
-          wb.save('Excel.xlsx')
-          print('Datos generados en Excel.xlsx')
-          procesoTerminado = True
-          break
-        else :
-          wb.save('NC.xlsx')
-          print('Datos generados en NC.xlsx')
-          procesoTerminado = True
-          break
+        procesoTerminado = True
+        break
       else:
         print('-- Contraseña Incorrecta --')
     
