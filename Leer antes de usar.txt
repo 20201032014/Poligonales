@@ -1,0 +1,3 @@
+-Para que funcione debe ingresar un usuario y contraseña use: Pepe de usuario y 948 de contraseña
+-las coordenadas principales las debe introducir usted
+-el excel debe abrirse para introducir los datos, pero debe estar cerrado para que el programa funcione.
