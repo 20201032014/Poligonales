@@ -40,23 +40,27 @@ while (True):
       2. Transito
       3. Crandall
     Nivelaciones
-      4. Compuesta
+      4. Geometrica
+      5. Trigonometrica
           """)
           metodoInput = input('Ingrese Metodo: ')
-          if (metodoInput == '1' or metodoInput == '2' or metodoInput == '3' or metodoInput == '4' or metodoInput == 'Brujula' or metodoInput == 'Transito' or metodoInput == 'Crandall' or metodoInput == 'Compuesta'):
+          if (metodoInput == '1' or metodoInput == '2' or metodoInput == '3' or metodoInput == '4' or metodoInput == '5' or metodoInput == 'Brujula' or metodoInput == 'Transito' or metodoInput == 'Crandall' or metodoInput == 'Geometrica' or metodoInput == 'Trigonometrica'):
             break
           else:
             print('Ingrese un Metodo Correcto')
 
         # Init
-        if (metodoInput != 'Compuesta' and metodoInput != '4'):
+        if (metodoInput != 'Geometrica' and metodoInput != '4' and metodoInput != 'Trigonometrica' and metodoInput != '5'):
           norteInput = int(input('Ingrese Norte: '))
           esteInput = int(input('Ingrese Este: '))
           shutil.copy('./Excel.xlsx', './ExcelGenerado.xlsx')
           wb = openpyxl.load_workbook('./ExcelGenerado.xlsx')
-        else :
+        if (metodoInput == 'Geometrica' or metodoInput == '4'):
           shutil.copy('./NC.xlsx', './NCGenerado.xlsx')
           wb = openpyxl.load_workbook('./NCGenerado.xlsx')
+        if (metodoInput == 'Trigonometrica' or metodoInput == '5'):
+          shutil.copy('./NV.xlsx', './NVGenerado.xlsx')
+          wb = openpyxl.load_workbook('./NVGenerado.xlsx')
 
         if (metodoInput == 'Brujula' or metodoInput == '1'):
           print('Brujula')
@@ -396,8 +400,8 @@ while (True):
           ax.plot(xxx, yyy)
           plt.show()
 
-        if (metodoInput == 'Compuesta' or metodoInput == '4'):
-          print('Compuesta')
+        if (metodoInput == 'Geometrica' or metodoInput == '4'):
+          print('Geometrica')
           sheet = wb['Hoja1']
           rows = sheet.max_row
           columns = sheet.max_column
@@ -571,6 +575,59 @@ while (True):
 
           wb.save('NCGenerado.xlsx')
           print('Datos generados en NCGenerado.xlsx')
+
+        if (metodoInput == 'Trigonometrica' or metodoInput == '5'):
+          print('Trigonometrica')
+          sheet = wb['Hoja1']
+          rows = sheet.max_row
+          columns = sheet.max_column
+
+          count = 1
+          rowsExcel = []
+
+          # FOR's para guardar los datos del Excel en un array
+          for row in range(1, rows-1):
+            rowArr = []
+            for column in range(columns):
+              valueCell = sheet.cell(row=row+1,column=column+1).value
+              rowArr.append(valueCell)
+
+            rowsExcel.append(rowArr)
+            count+=1
+
+          # Angulo V
+          for i in range(len(rowsExcel)-1):
+            print(rowsExcel[i][2], rowsExcel[i][3], rowsExcel[i][4])
+            AV = rowsExcel[i][2] + (rowsExcel[i][3]/60) + (rowsExcel[i][4]/3600)
+            rowsExcel[i][5] = AV
+            sheet[f'F{i+2}'] = AV
+
+            # * DH
+            print(rowsExcel[i][6], rowsExcel[i][8])
+            if (AV >= 90):
+              DH = 100*(rowsExcel[i][6]-rowsExcel[i][8])*(math.cos(AV) * math.cos(AV))
+            else:
+              DH = 100*(rowsExcel[i][6]-rowsExcel[i][8])*(math.cos(90-AV) * math.cos(90-AV))
+            sheet[f'J{i+2}'] = DH
+
+            # * DV
+            if (AV >= 90):
+              DV = DH * math.tan(AV)
+            else:
+              DV = DH * math.tan(90-AV)
+            sheet[f'K{i+2}'] = DV
+
+            # * Cota B
+            if (AV >= 90):
+              CB = rowsExcel[i][0]+rowsExcel[i][1]-DV-rowsExcel[i][7]
+            else:
+              CB = rowsExcel[i][0]+rowsExcel[i][1]+DV-rowsExcel[i][7]
+            sheet[f'N{i+2}'] = CB
+
+
+          wb.save('NVGenerado.xlsx')
+          print('Datos generados en NVGenerado.xlsx')
+
 
         procesoTerminado = True
         break
