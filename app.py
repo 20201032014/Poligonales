@@ -34,12 +34,11 @@ while (True):
         print('-- Logeado --')
         while (True):
           print("""
-  Metodos:
-    Poligonal
+  Correccon de poligonales:
       1. Brujula
       2. Transito
       3. Crandall
-    Nivelaciones
+  Nivelaciones
       4. Geometrica
       5. Trigonometrica
           """)
@@ -68,17 +67,16 @@ while (True):
           rows = sheet.max_row
           columns = sheet.max_column
 
-          count = 1
           rowsExcel = []
 
           # FOR's para guardar los datos del Excel en un array
-          for row in range(2, rows-1):
+          for row in range(2, rows):
             rowArr = []
             for column in range(columns):
               valueCell = sheet.cell(row=row+1,column=column+1).value
               rowArr.append(valueCell)
 
-            if(count % 2 == 0):
+            if(rowArr[0] == None and rowArr[1] != None):
               DH = rowArr[6]
               # Calcular Azimut
               grados = rowArr[2]
@@ -93,8 +91,8 @@ while (True):
               rowArr[7] = Y
               rowArr[8] = X
 
-            rowsExcel.append(rowArr)
-            count+=1
+            if (rowArr[0] == None and rowArr[1] != None):
+              rowsExcel.append(rowArr)
 
           # Calcular Sumatorias DH Y X
           sumDH = 0
@@ -123,22 +121,23 @@ while (True):
               rowsExcel[row][12] = XC
 
           for row in range(len(rowsExcel)):
-            if (row == 1):
+            # print(row, '***>', rowsExcel[row])
+            if (row == 0):
               rowsExcel[row][13] = rowsExcel[row][11] + norteInput
               rowsExcel[row][14] = rowsExcel[row][12] + esteInput
             else:
               if (rowsExcel[row][1] != None):
-                rowsExcel[row][13] = rowsExcel[row][11] + rowsExcel[row - 2][13]
-                rowsExcel[row][14] = rowsExcel[row][12] + rowsExcel[row - 2][14]
+                rowsExcel[row][13] = rowsExcel[row][11] + rowsExcel[row - 1][13]
+                rowsExcel[row][14] = rowsExcel[row][12] + rowsExcel[row - 1][14]
 
           # for row in range(len(rowsExcel)):
           #   print(rowsExcel[row])
 
-          for row in range(rows-1):
-            for column in range(columns):
-              if (row >= 3 and rowsExcel[row - 2][1] != None):
-                sheet[f'N{row + 1}'] = rowsExcel[row - 2][13]
-                sheet[f'O{row + 1}'] = rowsExcel[row - 2][14]
+          count4 = 4
+          for row in range(len(rowsExcel)):
+            sheet[f'N{count4}'] = rowsExcel[row][13]
+            sheet[f'O{count4}'] = rowsExcel[row][14]
+            count4+=2
           
           sheet['N3'] = norteInput
           sheet['O3'] = esteInput
@@ -169,13 +168,13 @@ while (True):
           rowsExcel = []
 
           # FOR's para guardar los datos del Excel en un array
-          for row in range(2, rows-1):
+          for row in range(2, rows):
             rowArr = []
             for column in range(columns):
               valueCell = sheet.cell(row=row+1,column=column+1).value
               rowArr.append(valueCell)
 
-            if(count % 2 == 0):
+            if(rowArr[0] == None and rowArr[1] != None):
               DH = rowArr[6]
               # Calcular Azimut
               grados = rowArr[2]
@@ -190,8 +189,8 @@ while (True):
               rowArr[7] = Y
               rowArr[9] = X
 
-            rowsExcel.append(rowArr)
-            count+=1
+            if (rowArr[0] == None and rowArr[1] != None):
+              rowsExcel.append(rowArr)
 
           # Calcular Sumatorias DH Y X
           sumDH = 0
@@ -222,7 +221,7 @@ while (True):
             if (rowsExcel[row][0] == None):
               DH = rowsExcel[row][6]
               CY = (sumY / sumVY) * rowsExcel[row][7]
-              CX = (sumX / sumVX) * rowsExcel[row][7]
+              CX = (sumX / sumVX) * rowsExcel[row][9]
 
               rowsExcel[row][11] = CY
               rowsExcel[row][12] = CX
@@ -241,22 +240,22 @@ while (True):
               rowsExcel[row][14] = XC
 
           for row in range(len(rowsExcel)):
-            if (row == 1):
+            if (row == 0):
               rowsExcel[row][15] = rowsExcel[row][13] + norteInput
               rowsExcel[row][16] = rowsExcel[row][14] + esteInput
             else:
               if (rowsExcel[row][1] != None):
-                rowsExcel[row][15] = rowsExcel[row][13] + rowsExcel[row - 2][15]
-                rowsExcel[row][16] = rowsExcel[row][14] + rowsExcel[row - 2][16]
+                rowsExcel[row][15] = rowsExcel[row][13] + rowsExcel[row - 1][15]
+                rowsExcel[row][16] = rowsExcel[row][14] + rowsExcel[row - 1][16]
 
           # for row in range(len(rowsExcel)):
           #   print(rowsExcel[row])
 
-          for row in range(rows-1):
-            for column in range(columns):
-              if (row >= 3 and rowsExcel[row - 2][1] != None):
-                sheet[f'P{row + 1}'] = rowsExcel[row - 2][15]
-                sheet[f'Q{row + 1}'] = rowsExcel[row - 2][16]
+          count4 = 4
+          for row in range(len(rowsExcel)):
+            sheet[f'P{count4}'] = rowsExcel[row][15]
+            sheet[f'Q{count4}'] = rowsExcel[row][16]
+            count4+=2
 
           sheet['P3'] = norteInput
           sheet['Q3'] = norteInput
@@ -287,13 +286,13 @@ while (True):
           rowsExcel = []
 
           # FOR's para guardar los datos del Excel en un array
-          for row in range(2, rows-1):
+          for row in range(2, rows):
             rowArr = []
             for column in range(columns):
               valueCell = sheet.cell(row=row+1,column=column+1).value
               rowArr.append(valueCell)
 
-            if(count % 2 == 0):
+            if(rowArr[0] == None and rowArr[1] != None):
               DH = rowArr[6]
               # Calcular Azimut
               grados = rowArr[2]
@@ -308,8 +307,8 @@ while (True):
               rowArr[7] = Y
               rowArr[8] = X
 
-            rowsExcel.append(rowArr)
-            count+=1
+            if (rowArr[0] == None and rowArr[1] != None):
+              rowsExcel.append(rowArr)
 
           # Calcular Sumatorias DH Y X
           sumDH = 0
@@ -367,19 +366,20 @@ while (True):
           #   print(rowsExcel[row][7], rowsExcel[row][8])
 
           for row in range(len(rowsExcel)):
-            if (row == 1):
+            if (row == 0):
               rowsExcel[row][17] = rowsExcel[row][15] + norteInput
               rowsExcel[row][18] = rowsExcel[row][16] + esteInput
             else:
               if (rowsExcel[row][1] != None):
-                rowsExcel[row][17] = rowsExcel[row][15] + rowsExcel[row - 2][17]
-                rowsExcel[row][18] = rowsExcel[row][16] + rowsExcel[row - 2][18]
+                rowsExcel[row][17] = rowsExcel[row][15] + rowsExcel[row - 1][17]
+                rowsExcel[row][18] = rowsExcel[row][16] + rowsExcel[row - 1][18]
           
-          for row in range(rows-1):
-            for column in range(columns):
-              if (row >= 3 and rowsExcel[row - 2][1] != None):
-                sheet[f'R{row + 1}'] = rowsExcel[row - 2][17]
-                sheet[f'S{row + 1}'] = rowsExcel[row - 2][18]
+          count4 = 4
+          for row in range(len(rowsExcel)):
+            # print(rowsExcel[row])
+            sheet[f'R{count4}'] = rowsExcel[row][17]
+            sheet[f'S{count4}'] = rowsExcel[row][18]
+            count4+=2
           
           sheet['R3'] = norteInput
           sheet['S3'] = norteInput
